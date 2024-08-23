@@ -1,0 +1,6 @@
+*.ipynb
+\data
+\__pycache__
+\for_thesis
+\results
+\inter_.py
