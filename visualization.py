@@ -8,6 +8,7 @@ from matplotlib.patches import Patch
 from typing import List, Literal
 from matplotlib.colors import CenteredNorm, Normalize
 from matplotlib.colors import LinearSegmentedColormap
+from constant import CUSTOM_PALETTE
 
 def visualize_similarity_matrix(
         dates: pd.DataFrame,
@@ -509,3 +510,348 @@ if __name__ == '__main__':
 #     normalizer = Normalize(0, 1, clip=True)
 #     fig, axs = plt.subplots(figsize = figsize)
 #     ax.imshow()
+
+def face_grid_5_dim(
+    df: pd.DataFrame,
+    metric: str,
+    y_lim: tuple | None = None,
+    save_name: str | None = None,
+    grid_col: str | None = "window",
+    grid_row: str | None = "indices",
+    inner_x: str | None = 'clusters',
+    inner_hue: str | None = 'pca',
+    inner_style: str | None ='correlations',
+):
+    """
+    Create a face grid for 5 hyperparameter dimensions for `metric`.
+
+    Args:
+        df (DataFrame): contains 5 hyperparameter columns  and 1 metric column.
+        metric (str): metric column name of `df` for the y azis of the inner figure. 
+        y_lim (tuple | None): tuple (y_min, y_max) for the y axis, i.e., vales of the metric. `None` indicates no limitaion. Default to `None`.
+        save_name (str | None): path to save the figure. If `None`, the figure will not be saved. Default to `None`.
+        grid_col (str): column name of `df` for the column of the grid. Default to `"window"`.
+        grid_row (str): column name of `df` for the row of the grid. Default to `"indices"`.
+        inner_x (str): column name of `df` for the x axis of the inner figure. Default to `'clusters'`.
+        inner_hue (str): column name of `df` for hue of the inner figure, i.e. color of the plot. Default to `'pca'`.
+        inner_style (str): column name of `df` for style of the inner figure, i.e. style of the plot. Default to `'correlations'`.
+    """
+    g = sns.FacetGrid(df, col=grid_col, row=grid_row, ylim=y_lim)
+    # Map a scatterplot onto the grid
+    g.map_dataframe(
+        sns.lineplot,
+        data=df,
+        x=inner_x,
+        y=metric,
+        hue=inner_hue,
+        style=inner_style,
+        markers=True,
+        dashes=True,
+        errorbar=None,
+        palette=CUSTOM_PALETTE
+    )
+
+    handles, labels = g.axes.flat[1].get_legend_handles_labels()
+    g.axes.flat[1].legend(handles=handles, labels=labels)
+
+    if save_name is not None:
+        g.savefig(save_name)
+
+
+def face_grid_4_dim(
+    df: pd.DataFrame,
+    metric: str,
+    y_lim: tuple | None = None,
+    save_name: str | None = None,
+    grid_col: str | None = "window",
+    grid_row: str | None = "indices",
+    inner_x: str | None = 'clusters',
+    inner_hue: str | None = 'pca'
+):
+    """
+    Create a face grid for 5 hyperparameter dimensions for `metric`.
+
+    Args:
+        df (DataFrame): contains 5 hyperparameter columns  and 1 metric column.
+        metric (str): metric column name of `df` for the y azis of the inner figure. 
+        y_lim (tuple | None): tuple (y_min, y_max) for the y axis, i.e., vales of the metric. `None` indicates no limitaion. Default to `None`.
+        save_name (str | None): path to save the figure. If `None`, the figure will not be saved. Default to `None`.
+        grid_col (str): column name of `df` for the column of the grid. Default to `"window"`.
+        grid_row (str): column name of `df` for the row of the grid. Default to `"indices"`.
+        inner_x (str): column name of `df` for the x axis of the inner figure. Default to `'clusters'`.
+        inner_hue (str): column name of `df` for hue of the inner figure, i.e. color of the plot. Default to `'pca'`.
+    """
+    g = sns.FacetGrid(df, col=grid_col, row=grid_row, ylim=y_lim)
+    # Map a scatterplot onto the grid
+    g.map_dataframe(
+        sns.lineplot,
+        data=df,
+        x=inner_x,
+        y=metric,
+        hue=inner_hue,
+        markers=True,
+        dashes=True,
+        errorbar=None,
+        palette=CUSTOM_PALETTE,
+        marker='o'
+
+    )
+
+    handles, labels = g.axes.flat[1].get_legend_handles_labels()
+    g.axes.flat[1].legend(handles=handles, labels=labels)
+
+    if save_name is not None:
+        g.savefig(save_name)
+
+    plt.close()
+
+def face_grid_3_dim(
+    df: pd.DataFrame,
+    metric: str,
+    y_lim: tuple | None = None,
+    save_name: str | None = None,
+    grid_col: str | None = "features",
+    inner_x: str | None = 'clusters',
+    inner_hue: str | None = 'pca'
+):
+    """
+    Create a face grid for 5 hyperparameter dimensions for `metric`.
+
+    Args:
+        df (DataFrame): contains 5 hyperparameter columns  and 1 metric column.
+        metric (str): metric column name of `df` for the y azis of the inner figure. 
+        y_lim (tuple | None): tuple (y_min, y_max) for the y axis, i.e., vales of the metric. `None` indicates no limitaion. Default to `None`.
+        save_name (str | None): path to save the figure. If `None`, the figure will not be saved. Default to `None`.
+        grid_col (str): column name of `df` for the column of the grid. Default to `"window"`.
+        grid_row (str): column name of `df` for the row of the grid. Default to `"indices"`.
+        inner_x (str): column name of `df` for the x axis of the inner figure. Default to `'clusters'`.
+        inner_hue (str): column name of `df` for hue of the inner figure, i.e. color of the plot. Default to `'pca'`.
+    """
+    g = sns.FacetGrid(df, col=grid_col, ylim=y_lim)
+    # Map a scatterplot onto the grid
+    g.map_dataframe(
+        sns.lineplot,
+        data=df,
+        x=inner_x,
+        y=metric,
+        hue=inner_hue,
+        markers=True,
+        dashes=True,
+        errorbar=None,
+        palette=CUSTOM_PALETTE,
+        marker='o'
+    )
+
+    handles, labels = g.axes.flat[1].get_legend_handles_labels()
+    g.axes.flat[1].legend(handles=handles, labels=labels)
+
+    if save_name is not None:
+        g.savefig(save_name)
+
+    plt.close()
+
+
+def visualize_summary_per_hyperparameter(
+        df: pd.DataFrame, 
+        metric: str, 
+        color_order: int | None, 
+        hyperparameters = ['sim_method', 'correlations', 'window', 'indices', 'pca'],
+        filename=None,
+        show=False,
+):
+    fig, axes = plt.subplots(1, len(hyperparameters), figsize=(4 * len(hyperparameters), 4))  # 2x2 grid for 4 hyperparameters
+
+    # adjust y_lim
+    if metric == 'clusters' or metric == 'match_clusters_real':
+        count_max = 0
+
+    # Plot each hyperparameter in a separate subplot
+    for ax, hyperparameter in zip(axes, hyperparameters):
+        if metric == 'clusters' or metric == 'match_clusters_real':
+            sns.countplot(x=hyperparameter, hue=metric, data=df, ax=ax)
+            count_max = max(count_max, df.groupby([metric, hyperparameter]).count().max().max())
+            ax.set_ylabel('count')
+        else:
+            sns.boxplot(x=hyperparameter, y=metric, data=df, ax=ax, color = sns.color_palette()[color_order])
+            ax.set_ylabel(metric)
+
+        ax.set_xlabel(hyperparameter)
+    
+    if metric == 'clusters' or metric == 'match_clusters_real':
+        for ax in axes:
+            ax.set_ylim(0, count_max + 2)
+
+    # Adjust layout
+    plt.tight_layout()
+    if filename is not None:
+        fig.savefig(filename)
+    if show:
+        plt.show()
+    plt.close()
+
+
+def visualize_summary_for_corr_not_optimal(
+    df: pd.DataFrame, 
+    fix_column_value: tuple, 
+    metric: str,
+    grid_col="window",
+    grid_row="indices",
+    inner_x='clusters',
+    inner_hue='pca',
+    inner_style='correlations'
+):
+    df = df[
+        (~df['find_optimal'])
+        &(df[fix_column_value[0]]==fix_column_value[1])
+    ].drop(columns=['find_optimal', fix_column_value[0]])
+    max_metirc = df[metric].max()
+    min_metric = df[metric].min()
+    y_lim = [min_metric, max_metirc]
+    df_meta = df[df['sim_method']=='meta'].drop(columns=['sim_method'])
+    df_cophenetic = df[df['sim_method'] == 'cophenetic'].drop(columns=['sim_method'])
+    face_grid_5_dim(
+        df=df_meta, 
+        y_lim=y_lim, 
+        save_name=fix_column_value[0]+'fixed-'+metric+'-meta', 
+        metric=metric,
+        grid_col=grid_col,
+        grid_row=grid_row,
+        inner_x=inner_x,
+        inner_hue=inner_hue,
+        inner_style=inner_style
+    )
+    face_grid_5_dim(
+        df=df_cophenetic, 
+        y_lim=y_lim, 
+        save_name=fix_column_value[0]+'fixed-'+metric+'-cophenetic', 
+        metric=metric,
+        grid_col=grid_col,
+        grid_row=grid_row,
+        inner_x=inner_x,
+        inner_hue=inner_hue,
+        inner_style=inner_style
+    )
+
+
+def visualize_summary_for_corr_optimal(
+        df: pd.DataFrame,
+        metric: str,
+        color_order: int | None
+):
+    df = df[(df['find_optimal']) & (df['slide'] == 10)].drop(columns=['find_optimal', 'slide'])
+    visualize_summary_per_hyperparameter(
+        df=df, 
+        metric=metric,
+        color_order=color_order, 
+        filename=metric+'-optimal',
+        hyperparameters=['sim_method', 'correlations', 'window', 'indices', 'pca']
+    )
+
+def visualize_summary_for_deep_not_optimal(
+    df: pd.DataFrame, 
+    metric: str,
+    grid_col="window",
+    grid_row="indices",
+    inner_x='clusters',
+    inner_hue='pca'
+):
+    df_fix_features = df[
+        (~df['find_optimal'])
+        &(df['features']==20)
+    ].drop(columns=['find_optimal', 'features'])
+
+    df_only_features = df[
+        (~df['find_optimal'])
+        &(df['window'] == 128)
+        &(df['indices'] == 5)
+    ].drop(columns=['find_optimal', 'window', 'indices'])
+
+    y_lim_fix_features = [df_fix_features[metric].min(), df_fix_features[metric].max()]
+    y_lim_only_features = [df_only_features[metric].min(), df_only_features[metric].max()]
+
+    face_grid_4_dim(
+        df=df_fix_features, 
+        y_lim=y_lim_fix_features, 
+        save_name='features'+'-fixed-'+metric, 
+        metric=metric,
+        grid_col=grid_col,
+        grid_row=grid_row,
+        inner_x=inner_x,
+        inner_hue=inner_hue
+    )
+
+    face_grid_3_dim(
+        df=df_only_features, 
+        y_lim=y_lim_only_features, 
+        save_name='features'+'-vary-'+metric, 
+        metric=metric,
+        grid_col='features',
+        inner_x=inner_x
+    )
+
+
+def visualize_summary_for_deep_optimal(
+        df: pd.DataFrame,
+        metric:  str,
+        color_order: int | None
+):
+    df = df[
+        (df['find_optimal'])
+        &(df['features'] == 20)
+    ].drop(columns=['find_optimal', 'features'])
+    visualize_summary_per_hyperparameter(
+        df=df,
+        metric=metric,
+        color_order=color_order,
+        filename=metric+'-optimal',
+        hyperparameters=['window', 'indices', 'pca']
+    )
+
+
+def visualize_summary_for_concat_not_optimal(
+        df: pd.DataFrame,
+        metric: str,
+):
+    df = df[~df['find_optimal']].drop(columns='find_optimal')
+    y_lim = [df[metric].min(), df[metric].max()]
+    face_grid_3_dim(
+        df=df, 
+        metric=metric,
+        y_lim=y_lim,
+        save_name=metric,
+        grid_col='weight_corr',
+    )
+
+
+def visualize_summary_for_concat_optimal(
+        df: pd.DataFrame,
+        metric: str,
+        color_order: int | None
+):
+    df = df[df['find_optimal']].drop(columns='find_optimal')
+    visualize_summary_per_hyperparameter(
+        df=df,
+        metric=metric,
+        color_order=color_order,
+        filename=metric+'-optimal',
+        hyperparameters=['weight_corr', 'pca']
+    )
+
+
+def visualize_summary_for_end_to_end(
+        df: pd.DataFrame,
+        metric: str,
+        color_order: int | None
+):
+    df = df[(df['l2_reg'] == 0) & (df['entropy_reg'] != 0)].drop(columns='l2_reg')
+    df['match_clusters_real'] = df['clusters_real'] == df['num_codes']
+    df['match_clusters_real'] = df['match_clusters_real'].apply(lambda x : 'match' if x else 'not match')
+    if metric != 'match_clusters_real':
+        df=df[df['match_clusters_real']=='match']
+    visualize_summary_per_hyperparameter(
+        df=df,
+        metric=metric,
+        hyperparameters=['window', 'indices', 'features', 'cnn_depth', 'entropy_reg', 'num_codes'],
+        filename=metric+'-optimal',
+        color_order=color_order,
+    )
