@@ -10,6 +10,7 @@ from matplotlib.colors import CenteredNorm, Normalize
 from matplotlib.colors import LinearSegmentedColormap
 from constant import CUSTOM_PALETTE
 
+
 def visualize_similarity_matrix(
         dates: pd.DataFrame,
         sim: np.ndarray,
@@ -49,57 +50,6 @@ def visualize_similarity_matrix(
     if filename is not None:
         fig.savefig(filename, dpi=600)
 
-        
-# def visualize_regimes(
-#         corr_dates:pd.Series,
-#         labels_all:List[np.ndarray],
-#         titles:List[str]|None=['regime_cophenetic','regime_meta'], 
-#         fig_title:str | None='regimes',
-#         filename:str|None=None,
-#         show=True, 
-#         figsize=(12,6), 
-#         nrows=1,
-#         ncols=2,
-#         formatter=r'%Y-%m-%d', 
-#         interval=1000
-# ):
-#     '''Visualize the regime identification results:
-
-#     Args:
-#         corr_dates
-#     '''
-    
-#     assert len(labels_all) == len(titles) == nrows*ncols
-
-#     number_range = np.arange(len(corr_dates))
-#     date_locator = mdates.DayLocator(interval=interval)
-#     fig, axs = plt.subplots(nrows,ncols,figsize=figsize)
-
-#     if len(labels_all) == 1:
-#         axs = [axs]
-
-#     for labels, ax, title in zip(labels_all,axs, titles):
-
-#         for label in np.unique(labels):
-#             subset = labels == label
-#             ax.scatter(number_range[subset],labels[subset],color=plt.cm._colormaps.get_cmap('Set1')(int(label)), label = label, s=1)
-
-#         ax.set_xticks(np.arange(len(corr_dates)))
-#         ax.set_xticklabels(corr_dates.dt.strftime(formatter),rotation=40)
-#         ax.xaxis.set_major_locator(date_locator)
-#         ax.set_title(title)
-#         ax.legend()
-
-#         ax.set_yticks(np.unique(labels))
-
-#     fig.suptitle(fig_title)
-
-#     if show:
-#         plt.show()
-
-#     if filename is not None:
-#         fig.savefig(filename)
-
 
 def visualize_regimes(
         regimes_df: pd.DataFrame,
@@ -113,7 +63,8 @@ def visualize_regimes(
         vix: pd.DataFrame | None = None,
         align: bool | None = False
 ):
-    '''Visualize the regime identification results:
+    '''
+    Visualize the regime identification results:
 
     Args:
         regimes_df: dataframe that must include columns ('DATE', 'regime')
@@ -130,12 +81,6 @@ def visualize_regimes(
         ax2 = ax.twinx()
         vix = pd.merge(vix, regimes_df, on = 'DATE')
         ax2.plot(regimes_df['DATE'], vix['VIX Index'])
-
-        # for regime, single_regime_df in regimes_df.groupby('regime'):
-        #     ax2 = ax.twinx()
-        #     ax2.scatter(single_regime_df['DATE'], [1]*len(single_regime_df['regime']) if align else single_regime_df['regime'], color=plt.cm._colormaps.get_cmap('tab20')(int(regime)), label = regime, s=1)
-        # ax2.set_yticks([0, 1, 2, 3, 4] if align else np.unique(regimes_df['regime']))
-        # ax2.set_yticklabels([]) if align else ax2.set_ylabel('regime')
     
     for regime, single_regime_df in regimes_df.groupby('regime'):
         ax.scatter(single_regime_df['DATE'], [1]*len(single_regime_df['regime']) if align else single_regime_df['regime'], color=plt.cm._colormaps.get_cmap('tab20')(int(regime) + 1), label = regime, s=1)
@@ -163,7 +108,6 @@ def visualize_regimes(
         fig.savefig(filename)
 
 
-
 def visualize_regime_durations(
         regime_durations_stats: pd.DataFrame, 
         filename: str | None = None,
@@ -173,9 +117,6 @@ def visualize_regime_durations(
         y_lim: tuple | None = None,
         backend: str | None = None
 ):
-    # num_regimes = len(regime_durations_stats) - 1
-    # labels = regime_durations_stats['regime']
-    # regime_durations_stats[regime_durations_stats['regime'] == 'all']['regime'] = num_regimes
     if backend is not None:
         matplotlib.use(backend)
     fig, axs = plt.subplots(nrows=1, ncols=2, figsize = figsize)
@@ -306,64 +247,6 @@ def visualize_transition_matrix_sns(
         fig.savefig(filename)
 
 
-# def visualize_regime_durations(
-#         regime_durations_stats_all: List[pd.DataFrame], 
-#         titles: List[str]| None = [None], 
-#         filename: str | None = None,
-#         show: bool | None = True, 
-#         figsize: tuple | None = (6,6), 
-#         nrows: int | None = 1,
-#         ncols: int | None = 1,
-#         fig_title: str | None = 'regime durations',
-#         y_lim: tuple | None = None
-# ):
-#     assert len(regime_durations_stats_all) == len(titles) == nrows*ncols
-
-#     fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize = figsize)
-
-#     max_duration = np.max([durations.drop(columns='std').max().max() for durations in regime_durations_stats_all])
-
-#     if len(regime_durations_stats_all) == 1:
-#         axs = [axs]
-
-#     for regime_durations, ax, title in zip(regime_durations_stats_all, axs, titles):
-#         regime_durations = regime_durations.drop('all', errors='ignore')
-#         for regime, single_regime_duration in regime_durations.iterrows():
-#             ax.bar(regime, 
-#                 single_regime_duration['75 quantile'] - single_regime_duration['25 quantile'], 
-#                 bottom=single_regime_duration['25 quantile'],
-#                 width=0.4, 
-#                 color = 'skyblue',
-#                 alpha=0.6)
-            
-#         ax.scatter(regime_durations.index.to_list(), regime_durations['median'].to_list(),label='Median',zorder=5)
-#         ax.scatter(regime_durations.index.to_list(), regime_durations['mean'].to_list(),label='Mean',zorder=5)
-#         ax.set_xticks(regime_durations.index.to_list())
-
-#         if y_lim is None:
-#             ax.set_ylim(0, max_duration + 10)
-#         else:
-#             ax.set_ylim(y_lim[0],y_lim[1])
-
-#         ax.legend()
-
-#         handles, labels = ax.get_legend_handles_labels()
-#         bar_patch = Patch(color='skyblue', label='25 to 75 percentile')
-#         handles.append(bar_patch)
-#         ax.legend(handles=handles)
-#         if title is not None:
-#             ax.set_title(title)
-
-#     fig.suptitle(fig_title)
-    
-#     if show:
-#         plt.show()
-
-#     if filename is not None:
-#         fig.savefig(filename)
-
-
-
 def visualize_losses(
         losses: list,
         figsize: tuple | None = (6,6),
@@ -390,6 +273,7 @@ def visualize_losses(
     
     if show_fig:
         plt.show()
+
 
 def visualize_cluster_assess_on_returns(
         df: pd.DataFrame,
@@ -429,7 +313,45 @@ def visualize_cluster_assess_on_returns(
         plt.show()
 
 
-def visualize_heatmap(
+def visualize_metrics_heatmaps(df: pd.DataFrame, metrics, filename: None = None):
+    """
+    Visualizes the heatmaps for the given metrics in the DataFrame.
+
+    Parameters:
+    df (pandas.DataFrame): The DataFrame containing the data.
+    metrics (list of str): A list of metric names to visualize. The list should contain exactly three metric names.
+
+    Returns:
+    None: Displays the heatmaps.
+    """
+    if len(metrics) != 3:
+        raise ValueError("The metrics list should contain exactly three metric names.")
+    
+    # Set up the matplotlib figure with subplots
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+
+    # Loop through each metric and plot on corresponding axes
+    for i, metric in enumerate(metrics):
+        # Pivot the data for the current metric
+        metric_pivot = df.pivot(index="regime", columns="index", values=metric).sort_index(ascending=False)
+        
+        # Plot heatmap on the corresponding subplot axis
+        sns.heatmap(metric_pivot, annot=True, cmap='seismic' if i != 1 else 'seismic_r', center=0, ax=axes[i])
+        axes[i].set_title(f'{metric}')
+        axes[i].set_xlabel('')  # Remove the x-axis label
+        axes[i].set_ylabel('')  # Remove the y-axis label
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Save the figure if filename is provided
+    if filename is not None:
+        plt.savefig(filename)
+
+    plt.show()
+
+
+def visualize_sc_heatmap(
         df: pd.DataFrame,
         text_columns: List[str],
         numeric_columns: List[str],
@@ -480,36 +402,6 @@ def visualize_heatmap(
     if show_fig:
         plt.show()
 
-if __name__ == '__main__':
-    import json
-    # import stats
-    # regimes = {
-    #     'DATE': pd.date_range(start='2001-01-01', periods=1000, freq='D'),
-    #     'regime': np.random.choice([0,1,2,3], 1000, replace=True),
-    #     'price1': np.random.random(1000),
-    #     'price2': np.random.random(1000)
-    # }
-    # regimes_df = pd.DataFrame(regimes)
-
-    # stats_d = stats.analyse_regimes_durations(regimes_df)
-    # transition_matrix = stats.calculate_transition_matrix_regime_level(regimes_df)
-    # print(stats_d)
-    # visualize_transition_matrix(transition_matrix)
-
-    # with open(r'data\inter data\deep learning\2024-07-18 11-31-56\training_log.json', 'r') as f:
-    #     config = json.load(f)
-    #     losses = config['losses']
-
-    # visualize_losses(losses=losses)
-
-# def visualize_transition_matrix(
-#         matrix: np.ndarray,
-#         figsize: tuple | None = (6,6),
-#         filename: str | None = None,
-#         show_fig: bool | None = True):
-#     normalizer = Normalize(0, 1, clip=True)
-#     fig, axs = plt.subplots(figsize = figsize)
-#     ax.imshow()
 
 def face_grid_5_dim(
     df: pd.DataFrame,
