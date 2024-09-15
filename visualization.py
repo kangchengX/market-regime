@@ -554,12 +554,12 @@ def visualize_summary_per_hyperparameter(
     fig, axes = plt.subplots(1, len(hyperparameters), figsize=(4 * len(hyperparameters), 4))  # 2x2 grid for 4 hyperparameters
 
     # adjust y_lim
-    if metric == 'clusters' or metric == 'match_clusters_real':
+    if metric == 'clusters' or metric == 'match_codes':
         count_max = 0
 
     # Plot each hyperparameter in a separate subplot
     for ax, hyperparameter in zip(axes, hyperparameters):
-        if metric == 'clusters' or metric == 'match_clusters_real':
+        if metric == 'clusters' or metric == 'match_codes':
             sns.countplot(x=hyperparameter, hue=metric, data=df, ax=ax)
             count_max = max(count_max, df.groupby([metric, hyperparameter]).count().max().max())
             ax.set_ylabel('count')
@@ -569,7 +569,7 @@ def visualize_summary_per_hyperparameter(
 
         ax.set_xlabel(hyperparameter)
     
-    if metric == 'clusters' or metric == 'match_clusters_real':
+    if metric == 'clusters' or metric == 'match_codes':
         for ax in axes:
             ax.set_ylim(0, count_max + 2)
 
@@ -642,8 +642,8 @@ def visualize_summary_for_corr_optimal(
 def visualize_summary_for_deep_not_optimal(
     df: pd.DataFrame, 
     metric: str,
-    grid_col="window",
-    grid_row="indices",
+    grid_col="indices",
+    grid_row="window",
     inner_x='clusters',
     inner_hue='pca'
 ):
@@ -736,14 +736,18 @@ def visualize_summary_for_end_to_end(
         color_order: int | None
 ):
     df = df[(df['l2_reg'] == 0) & (df['entropy_reg'] != 0)].drop(columns='l2_reg')
-    df['match_clusters_real'] = df['clusters_real'] == df['num_codes']
-    df['match_clusters_real'] = df['match_clusters_real'].apply(lambda x : 'match' if x else 'not match')
-    if metric != 'match_clusters_real':
-        df=df[df['match_clusters_real']=='match']
+    df['match_codes'] = df['clusters_real'] == df['num_codes']
+    df['match_codes'] = df['match_codes'].apply(lambda x : 'match' if x else 'not match')
+    if metric != 'match_codes':
+        df=df[df['match_codes']=='match']
+    else:
+        # add column 'match_codes'
+        df['match_codes'] = df['clusters_real'] == df['num_codes']
+        df['match_codes'] = df['match_codes'].apply(lambda x : 'match' if x else 'not match')
     visualize_summary_per_hyperparameter(
         df=df,
         metric=metric,
         hyperparameters=['window', 'indices', 'features', 'cnn_depth', 'entropy_reg', 'num_codes'],
-        filename=metric+'-optimal',
+        filename=metric,
         color_order=color_order,
     )
