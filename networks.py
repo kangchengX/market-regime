@@ -1,39 +1,41 @@
 import torch
 import torch.nn as nn
 from typing import Literal, List, Tuple
-from constant import STRING_MODULE_MAP
+from constant import TORCH_MODULE_MAP, CUSTOM_MODULE_MAP
+
 
 class AutoEncoder(nn.Module):
-    """Implementation of the autoencoder"""
+    """Implementation of the autoencoder."""
     def __init__(
-            self, 
-            encoder: Literal['cnn', 'mlp', 'conv', 'conv_trans'], 
-            encoder_args: dict,
-            decoder: nn.Module,
-            decoder_args: dict,
-            reshape_encoder: Literal['flatten', 'unflatten', None] | None = None,
-            reshape_decoder: Literal['flatten', 'unflatten', None] | None = None,
-            inter_feature_shape: Tuple[int, int, int] | None = None,
-            out_feature_shape: Tuple[int, int, int] | None = None
+        self, 
+        encoder: Literal['cnn', 'mlp', 'conv', 'conv_trans'], 
+        encoder_args: dict,
+        decoder: nn.Module,
+        decoder_args: dict,
+        reshape_encoder: Literal['flatten', 'unflatten', None] | None = None,
+        reshape_decoder: Literal['flatten', 'unflatten', None] | None = None,
+        inter_feature_shape: Tuple[int, int, int] | None = None,
+        out_feature_shape: Tuple[int, int, int] | None = None
     ):
-        """Initialize the model
+        """
+        Initialize the model.
         
         Args:
-            encoder (str): the encoder model
-            encoder_args (dict): args of the encoder model
-            decoder (str): the decoder model
-            decoder_args (dict): args of the decoder model
+            encoder (str): The encoder module.
+            encoder_args (dict): Args of the encoder module.
+            decoder (str): The decoder module.
+            decoder_args (dict): Args of the decoder module.
             reshape_encoder (str | None): If 'flatten', flatten the outputs of the encoder; if 'unflatten', unflatten the outputs of the encoder to [batch, channels, height, width]
-                according to `inter_feature_shape`; if None, not reshape
+                according to `inter_feature_shape`; if `None`, not reshape. Default to `None`.
             reshape_decoder (str | None): If 'flatten', flatten the outputs of the decoder; if 'unflatten', unflatten the outputs of the decoder to [batch, channels, height, width]
-                according to `out_feature_shape`; if None, not reshape
-            inter_feature_shape (tuple): (channels, height, width) if the input of the decoder is an image
-            out_feature_shape (tuple): (channels, height, width) if the final output of the model is an image
+                according to `out_feature_shape`; if `None`, not reshape. Default to `None`.
+            inter_feature_shape (tuple): (channels, height, width) if the input of the decoder is an image. Default to `None`.
+            out_feature_shape (tuple): (channels, height, width) if the final output of the model is an image. Default to `None`.
         """
         
         super().__init__()
-        self.encoder = Module_Map[encoder](**encoder_args)
-        self.decoder = Module_Map[decoder](**decoder_args)
+        self.encoder = CUSTOM_MODULE_MAP[encoder](**encoder_args)
+        self.decoder = CUSTOM_MODULE_MAP[decoder](**decoder_args)
 
         if reshape_encoder == 'flatten':
             self.reshape_encoder = nn.Flatten()
@@ -64,20 +66,20 @@ class AutoEncoder(nn.Module):
 
 class MLPBlock(nn.Module):
     def __init__(
-            self, 
-            dims: list, 
-            activation: nn.Module | None =nn.ReLU(), 
-            out_activation: nn.Module | None = None,
-            dropout: float | None = 0.5
+        self, 
+        dims: list, 
+        activation: nn.Module | None = nn.ReLU(), 
+        out_activation: nn.Module | None = None,
+        dropout: float | None = 0.5
     ):
         """
-        Initialize the module
+        Initialize the module.
 
         Args:
-            dim (list): list of dims in the mlp module
-            activation (Module): activation after each linear layer other than the last one
-            out_activation (Module): activation after the last linear layer
-            dropout (float): dropout rate
+            dim (list): List of dims in the mlp module.
+            activation (Module): Activation after each linear layer other than the last one.
+            out_activation (Module): Activation after the last linear layer.
+            dropout (float): Dropout rate.
         """
         super().__init__()
         self.mlp = nn.Sequential()
@@ -95,26 +97,28 @@ class MLPBlock(nn.Module):
     
 
 class ConvSubBlock(nn.Module):
-    '''multiple 2-d convolutional layers with or without pooling layer'''
+    """Multiple 2-d convolutional layers with or without pooling layer."""
     def __init__(
-            self, 
-            channels: list, 
-            pooling_method: Literal['avg','max', None] | None = 'max',
-            activation: nn.Module | None = None
+        self, 
+        channels: list, 
+        pooling_method: Literal['avg','max', None] | None = 'max',
+        activation: nn.Module | None = None
     ):
-        '''Initialize the model
+        """
+        Initialize the model.
         
         Args:
-            channels: channels for the convolutional layers. 
+            channels: Channels for the convolutional layers. 
                 Convolutional layers will be formed for each consecutive pair of channels.
                 For example, if the arg is [64, 128, 128], the first layer will be a 2-d conv layer
                 with (64,128) as (in_channels, out_channels), and the second layer will be a 2-d conv layer
-                with (128,128) as (in_channels, out_channels)
-            pooling_method: the pooling method. 'avg' indicates average pooling, 
-                'max' indicates max pooling, None indicates do not form any pooling layer
-            activation: the activation layer. None indicates do not form any activation layer. 
-                This will be the last layer (if None is not passed)
-        '''
+                with (128,128) as (in_channels, out_channels).
+            pooling_method: The pooling method. `'avg'` indicates average pooling, 
+                `'max'` indicates max pooling, `None` indicates do not form any pooling layer.
+                Default to `'max'`.
+            activation: The activation layer. `None` indicates do not form any activation layer. 
+                This will be the last layer (if `None` is not passed). Default to `None`.
+        """
 
         super().__init__()
         self.conv_layers = nn.Sequential()
@@ -140,22 +144,25 @@ class ConvSubBlock(nn.Module):
     
 
 class ConvBlock(nn.Module):
-    '''The entire convolutional part'''
+    """The entire convolutional part."""
     def __init__(
-            self, 
-            channels_all: List[List[int]] | None = None,
-            pooling_method: str | None = 'max',
-            activation: nn.Module | None = None,
-            models_args: List[dict] | None = None
+        self, 
+        channels_all: List[List[int]] | None = None,
+        pooling_method: str | None = 'max',
+        activation: nn.Module | None = None,
+        models_args: List[dict] | None = None
     ):
         """
-        Initialize the model
+        Initialize the model.
 
         Args:
-            channels_all (list): list where each element is also a list containing the channels for the sub convolutional block
-            pooling_method (str): the pooling method for all the pooling layers.
-            activation (Module): the activation function of the last layer of each sub convolutional blocks
-            models_args (list): list where each element is the arg dict for the sub convolutional block.
+            channels_all (list): List where each element is also a list containing the channels for the sub convolutional block.
+                If `None`, the channels must be passed through `models_args`. Default to `None`.
+            pooling_method (str): The pooling method for all the pooling layers. Default to `'max'`.
+            activation (Module): The activation function of the last layer of each sub convolutional blocks. 
+                `None` indicates no activation function for the last layer. Default to `None`.
+            models_args (list): List each element of which is the arg dict for the sub convolutional block. 
+                If `None`, the channels must be passed through `channels_all`. Default to `None`.
         """
         
         assert (channels_all is None) ^ (models_args is None), 'channels_all and models_args cannot be both not None nor both None'
@@ -182,18 +189,18 @@ class ConvBlock(nn.Module):
 
 class ConvTransBlock(nn.Module):
     def __init__(
-            self, 
-            channels: list, 
-            activation: nn.Module | None = nn.ReLU(),
-            out_activation: nn.Module | None = nn.Sigmoid()
+        self, 
+        channels: list, 
+        activation: nn.Module | None = nn.ReLU(),
+        out_activation: nn.Module | None = nn.Sigmoid()
     ):
         """
-        Initialize the model
+        Initialize the model.
 
         Args:
-            channels (list): list of channels of the module
-            activation (Module): activation after each ConvTranspose2d other than the last one
-            out_activation (Module): activation after the last ConvTranspose2d
+            channels (list): List of channels of the module.
+            activation (Module): Activation after each ConvTranspose2d other than the last one. Default to `nn.ReLU()`.
+            out_activation (Module): Activation after the last ConvTranspose2d. Default to `nn.Sigmoid()`.
         """
         super().__init__()
         self.conv_trans_layers = nn.Sequential()
@@ -212,24 +219,24 @@ class ConvTransBlock(nn.Module):
     
 
 class CNN(nn.Module):
-    """A simple CNN module"""
+    """A simple CNN module."""
     def __init__(
-            self, 
-            channels_all: List[List[int]],
-            mlp_dims: list,
-            activations_conv: nn.Module | None = None,
-            actications_mlp: nn.Module | None = nn.ReLU(),
-            out_activation_mlp: nn.Module | None = None,
+        self, 
+        channels_all: List[List[int]],
+        mlp_dims: list,
+        activations_conv: nn.Module | None = None,
+        actications_mlp: nn.Module | None = nn.ReLU(),
+        out_activation_mlp: nn.Module | None = None
     ):
         """
-        Initialize the module
+        Initialize the module.
 
         Args:
-            channels_all (list): list where each element is also a list containing the channels for the sub convolutional block
-            mlp_dims (list): list of mlp dims
-            activations_conv (Module): activation after each pooling layer in the convolutional part
-            activations_mlp (Module): activation after each linear layer in mlp other than the last one
-            out_activation_mlp (Module): activation after the last linear layer in mlp
+            channels_all (list): List where each element is also a list containing the channels for the sub convolutional block.
+            mlp_dims (list): List of mlp dims.
+            activations_conv (Module): Activation after each pooling layer in the convolutional part. Default to `None`.
+            activations_mlp (Module): Activation after each linear layer in mlp other than the last one. Default to `nn.ReLU()`.
+            out_activation_mlp (Module): Activation after the last linear layer in mlp. Default to `None`.
         """
         super().__init__()
         self.conv_block = ConvBlock(channels_all=channels_all, activation=activations_conv)
@@ -244,35 +251,16 @@ class CNN(nn.Module):
         return outputs
 
 
-Module_Map = {
-    'cnn' : CNN,
-    'mlp' : MLPBlock,
-    'conv' : ConvBlock,
-    'conv_trans' : ConvTransBlock
-}
-
-# class MAE(nn.Module):
-#     def __init__(self, encoder_args, convtrans_dims):
-#         super().__init__()
-#         self.encoder = nn.Sequential()
-#         for args in encoder_args:
-#             self.encoder.append(ConvSubBlock(*args))
-
-#         # self.encoder.append(nn.Flatten())
-
-#         # self.encoder.append(MLPBlock(*encoder_args[-1]))
-
-#         self.decoder = ConvTransBlock(convtrans_dims)
-
-#     def forward(self, x:torch.Tensor):
-#         outputs = self.encoder(x)
-#         outputs = self.decoder(outputs)
-
-#         return outputs
-
-
 class CodeBook(nn.Module):
-    def __init__(self, num_feature, num_codes):
+    """The CodeBook, which is an interpretation of the end-to-end model from the perspective of a two-stage model."""
+    def __init__(self, num_feature: int, num_codes: int):
+        """
+        Initialize the module. This is a dense layer.
+
+        Args:
+            num_feature (int): The 'feature' dimension, i.e., input dimension of the dense layer.
+            num_codes (int): Number of the codes in the CodeBook, i.e., the given number of regimes, or, the output dimension of this dense layer.
+        """
         super().__init__()
         self.num_codes = num_codes
         self.sim = nn.Linear(in_features=num_feature, out_features=self.num_codes)
@@ -287,34 +275,33 @@ class CodeBook(nn.Module):
 
         return indices
     
+
 class AutoEncoderCodeBook(nn.Module):
-    """Implementation of the autoencoder with code book, i.e., end to end model for regime identification"""
+    """Implementation of the autoencoder with CodeBook, i.e., end to end model for regime identification."""
     def __init__(
-            self, 
-            encoder: Literal['cnn', 'mlp', 'conv', 'conv_trans'], 
-            encoder_args: dict,
-            num_features: int,
-            num_codes: int,
-            out_flatten: bool | None = False,
-            out_activation: str | nn.Module | None = None
+        self, 
+        encoder: Literal['cnn', 'mlp', 'conv', 'conv_trans'], 
+        encoder_args: dict,
+        num_features: int,
+        num_codes: int,
+        out_flatten: bool | None = False,
+        out_activation: str | nn.Module | None = None
     ):
-        """Initialize the model
+        """Initialize the module.
         
         Args:
-            encoder (str): the encoder model
-            encoder_args (dict): args of the encoder model
-            decoder (str): the decoder model
-            decoder_args (dict): args of the decoder model
-            reshape_encoder (str | None): If 'flatten', flatten the outputs of the encoder; if 'unflatten', unflatten the outputs of the encoder to [batch, channels, height, width]
-                according to `inter_feature_shape`; if None, not reshape
-            reshape_decoder (str | None): If 'flatten', flatten the outputs of the decoder; if 'unflatten', unflatten the outputs of the decoder to [batch, channels, height, width]
-                according to `out_feature_shape`; if None, not reshape
-            inter_feature_shape (tuple): (channels, height, width) if the input of the decoder is an image
-            out_feature_shape (tuple): (channels, height, width) if the final output of the model is an image
+            encoder (str): The `encoder` module.
+            encoder_args (dict): Args of the `encoder` module.
+            num_feature (int): The 'feature' dimension, i.e., input dimension of the last dense layer of the whole model.
+            num_codes (int): Number of the codes in the CodeBook, i.e., the given number of regimes, or, the output dimension of this last layer of the whole model.
+            out_flatten (bool): If `True`, the 'features' will be flattened before being fed into the CodeBook, i.e., the last layer of the whole model.
+                Default to `False`.
+            out_activation (str|Module|None): If not `None`, the 'features' will go through the given activation function before being fed into the CodeBook, 
+                i.e., the last layer of the whole model. Default to `None`.
         """
         
         super().__init__()
-        self.encoder = Module_Map[encoder](**encoder_args)
+        self.encoder = CUSTOM_MODULE_MAP[encoder](**encoder_args)
         self.codebook = CodeBook(num_feature=num_features, num_codes=num_codes)
 
         if out_flatten:
@@ -324,7 +311,7 @@ class AutoEncoderCodeBook(nn.Module):
 
         if out_activation is not None:
             if isinstance(out_activation, str):
-                self.out_activation = STRING_MODULE_MAP[out_activation]
+                self.out_activation = TORCH_MODULE_MAP[out_activation]
             else:
                 self.out_activation = out_activation
         else:

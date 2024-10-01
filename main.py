@@ -293,15 +293,15 @@ if __name__ == '__main__':
 
     ################### two-stage models ###################
 
-    # experiment one, feature extraction based on correlation matrices -> cluster
+    # experiment 1, feature extraction based on correlation matrices -> cluster
     execute_similarity_generate_flow('data/inter data/correlation')
     execute_cluster_flow('data/inter data/correlation', add_hierarchical=True)
 
-    # experiment two, feature extraction based on cnn auto encoder -> cluster
+    # experiment 2, feature extraction based on cnn auto encoder -> cluster
     execute_train_flow('data/inter data/deep learning')
     execute_cluster_flow('data/inter data/deep learning', add_hierarchical=False)
 
-    # combination of one and two experiments, feature concatenation -> cluster
+    # experiment 3, combination of one and two experiments, feature concatenation -> cluster
     deep_model_dir = utils.filter_deep_model_dir(
         'data/inter data/deep learning',
         window_size=128,
@@ -322,6 +322,5 @@ if __name__ == '__main__':
     execute_cluster_flow('data/inter data/concat', add_hierarchical=False)
 
     ################### end-to-end model ###################
-    # experiment three, Siamses cnn
+    # experiment 4, Siamese CNN
     execute_end_to_end_flow('data/inter data/end-to-end', 'results/end-to-end')
-
