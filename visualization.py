@@ -12,17 +12,20 @@ from constant import CUSTOM_PALETTE
 
 
 def visualize_similarity_matrix(
-        dates: pd.DataFrame,
-        sim: np.ndarray,
-        title: Literal['meta','cophenetic'], 
-        figtitle: str | None = None,
-        filename: str | None = None, 
-        show = True, 
-        figsize = (6,6), 
-        formatter=r'%Y-%m-%d', 
-        interval=1000,
-        backend: str | None = None
+    dates: pd.DataFrame,
+    sim: np.ndarray,
+    title: Literal['meta','cophenetic'], 
+    figtitle: str | None = None,
+    filename: str | None = None, 
+    show: bool | None = True, 
+    figsize: tuple | None = (6,6), 
+    formatter: str | None = r'%Y-%m-%d', 
+    interval: int | None = 1000,
+    backend: str | None = None
 ):
+    """
+    Visualize the similarity matrix obtained in the CFM.
+    """
     if backend is not None:
         matplotlib.use(backend)
     dates =  dates['DATE']
@@ -52,23 +55,20 @@ def visualize_similarity_matrix(
 
 
 def visualize_regimes(
-        regimes_df: pd.DataFrame,
-        fig_title: str | None='regimes',
-        filename: str | None=None,
-        show=True, 
-        figsize=(18, 6), 
-        formatter=r'%Y-%m-%d', 
-        interval=1000,
-        backend: str | None = None,
-        vix: pd.DataFrame | None = None,
-        align: bool | None = False
+    regimes_df: pd.DataFrame,
+    fig_title: str | None = 'regimes',
+    filename: str | None = None,
+    show: bool | None = True, 
+    figsize: tuple | None = (18, 6), 
+    formatter: str | None = r'%Y-%m-%d', 
+    interval: int | None = 1000,
+    backend: str | None = None,
+    vix: pd.DataFrame | None = None,
+    align: bool | None = False
 ):
-    '''
-    Visualize the regime identification results:
-
-    Args:
-        regimes_df: dataframe that must include columns ('DATE', 'regime')
-    '''
+    """
+    Visualize the regime identification results.
+    """
     
     regimes_df['regime'] = regimes_df['regime'] - regimes_df['regime'].min()
 
@@ -109,14 +109,17 @@ def visualize_regimes(
 
 
 def visualize_regime_durations(
-        regime_durations_stats: pd.DataFrame, 
-        filename: str | None = None,
-        show: bool | None = True, 
-        figsize: tuple | None = (12, 6), 
-        fig_title: str | None = 'regime durations',
-        y_lim: tuple | None = None,
-        backend: str | None = None
+    regime_durations_stats: pd.DataFrame, 
+    filename: str | None = None,
+    show: bool | None = True, 
+    figsize: tuple | None = (12, 6), 
+    fig_title: str | None = 'regime durations',
+    y_lim: tuple | None = None,
+    backend: str | None = None
 ):
+    """
+    Visualize the regime durations.
+    """
     if backend is not None:
         matplotlib.use(backend)
     fig, axs = plt.subplots(nrows=1, ncols=2, figsize = figsize)
@@ -177,13 +180,16 @@ def visualize_regime_durations(
 
 
 def visualize_transition_matrix(
-        transition_matrix: pd.DataFrame,
-        filename: str | None = None,
-        show: bool | None = True, 
-        figsize: tuple | None = (6, 6), 
-        fig_title: str | None = 'transition matrix',
-        backend: str | None = None
+    transition_matrix: pd.DataFrame,
+    filename: str | None = None,
+    show: bool | None = True, 
+    figsize: tuple | None = (6, 6), 
+    fig_title: str | None = 'transition matrix',
+    backend: str | None = None
 ):
+    """
+    Visualize the transition matrix.
+    """
     if backend is not None:
         matplotlib.use(backend)
     fig, ax = plt.subplots(figsize=figsize)
@@ -205,16 +211,20 @@ def visualize_transition_matrix(
         
 
 def visualize_transition_matrix_sns(
-        transition_matrix: pd.DataFrame,
-        filename: str | None = None,
-        show: bool | None = True, 
-        figsize: tuple | None = (6, 5), 
-        fig_title: str | None = 'transition matrix',
-        annot: bool = True,
-        fmt: str = ".2f",
-        cbar: bool = True,
-        backend: str | None = None
+    transition_matrix: pd.DataFrame,
+    filename: str | None = None,
+    show: bool | None = True, 
+    figsize: tuple | None = (6, 5), 
+    fig_title: str | None = 'transition matrix',
+    annot: bool = True,
+    fmt: str = ".2f",
+    cbar: bool = True,
+    backend: str | None = None
 ):
+    """
+    Visualize the transition matrix using sns.
+    """
+
     if backend is not None:
         matplotlib.use(backend)
 
@@ -248,19 +258,14 @@ def visualize_transition_matrix_sns(
 
 
 def visualize_losses(
-        losses: list,
-        figsize: tuple | None = (6,6),
-        filename: str | None = None,
-        show_fig: bool | None = True,
-        backend: str | None = None
+    losses: list,
+    figsize: tuple | None = (6,6),
+    filename: str | None = None,
+    show_fig: bool | None = True,
+    backend: str | None = None
 ):
-    """Visualize the losses against epochs
-    
-    Args:
-        losses : list of losses for each epoch
-        fig_size : tuple of 2 elements (height, width)
-        filename : filename to save the plot. If None, the plot will not be saved. Default is None
-        show_fig : if show the plot. True indicates show the plot
+    """
+    Visualize the losses against epochs.
     """
     if backend is not None:
         matplotlib.use(backend)
@@ -276,14 +281,17 @@ def visualize_losses(
 
 
 def visualize_cluster_assess_on_returns(
-        df: pd.DataFrame,
-        fig_title: str,
-        fig_size: tuple,
-        show_fig: bool | None = True,
-        filename: str | None = None,
-        backend: str | None = None
+    df: pd.DataFrame,
+    fig_title: str,
+    fig_size: tuple,
+    show_fig: bool | None = True,
+    filename: str | None = None,
+    backend: str | None = None
 ):
-    
+    """
+    Visualize the forward and trailing returns within different regimes.
+    """
+
     if backend is not None:
         matplotlib.use(backend)
 
@@ -316,14 +324,8 @@ def visualize_cluster_assess_on_returns(
 def visualize_metrics_heatmaps(df: pd.DataFrame, metrics, filename: None = None):
     """
     Visualizes the heatmaps for the given metrics in the DataFrame.
-
-    Parameters:
-    df (pandas.DataFrame): The DataFrame containing the data.
-    metrics (list of str): A list of metric names to visualize. The list should contain exactly three metric names.
-
-    Returns:
-    None: Displays the heatmaps.
     """
+
     if len(metrics) != 3:
         raise ValueError("The metrics list should contain exactly three metric names.")
     
@@ -351,16 +353,20 @@ def visualize_metrics_heatmaps(df: pd.DataFrame, metrics, filename: None = None)
     plt.show()
 
 
-def visualize_sc_heatmap(
-        df: pd.DataFrame,
-        text_columns: List[str],
-        numeric_columns: List[str],
-        fig_title: str,
-        fig_size: tuple,
-        show_fig: bool | None = True,
-        filename: str | None = None,
-        backend: str | None = None
+def visualize_heatmap(
+    df: pd.DataFrame,
+    text_columns: List[str],
+    numeric_columns: List[str],
+    fig_title: str,
+    fig_size: tuple,
+    show_fig: bool | None = True,
+    filename: str | None = None,
+    backend: str | None = None
 ):
+    """
+    Visualize the percentage price change across different regimes and indices.
+    """
+
     if backend is not None:
         matplotlib.use(backend)
 
@@ -428,6 +434,7 @@ def face_grid_5_dim(
         inner_hue (str): column name of `df` for hue of the inner figure, i.e. color of the plot. Default to `'pca'`.
         inner_style (str): column name of `df` for style of the inner figure, i.e. style of the plot. Default to `'correlations'`.
     """
+
     g = sns.FacetGrid(df, col=grid_col, row=grid_row, ylim=y_lim)
     # Map a scatterplot onto the grid
     g.map_dataframe(
@@ -544,13 +551,17 @@ def face_grid_3_dim(
 
 
 def visualize_summary_per_hyperparameter(
-        df: pd.DataFrame, 
-        metric: str, 
-        color_order: int | None, 
-        hyperparameters = ['sim_method', 'correlations', 'window', 'indices', 'pca'],
-        filename=None,
-        show=False,
+    df: pd.DataFrame, 
+    metric: str, 
+    color_order: int | None, 
+    hyperparameters = ['sim_method', 'correlations', 'window', 'indices', 'pca'],
+    filename=None,
+    show=False,
 ):
+    """
+    Visualize the metrics for the ablation study grouped by hyperparameters and values of the hyperparameters.
+    """
+
     fig, axes = plt.subplots(1, len(hyperparameters), figsize=(4 * len(hyperparameters), 4))  # 2x2 grid for 4 hyperparameters
 
     # adjust y_lim
@@ -592,6 +603,10 @@ def visualize_summary_for_corr_not_optimal(
     inner_hue='pca',
     inner_style='correlations'
 ):
+    """
+    Visualize the summary of the ablation study for CFM without results with optimal number of clusters.
+    """
+
     df = df[
         (~df['find_optimal'])
         &(df[fix_column_value[0]]==fix_column_value[1])
@@ -626,10 +641,14 @@ def visualize_summary_for_corr_not_optimal(
 
 
 def visualize_summary_for_corr_optimal(
-        df: pd.DataFrame,
-        metric: str,
-        color_order: int | None
+    df: pd.DataFrame,
+    metric: str,
+    color_order: int | None
 ):
+    """
+    Visualize the summary of the ablation study for CFM with results with optimal number of clusters.
+    """
+        
     df = df[(df['find_optimal']) & (df['slide'] == 10)].drop(columns=['find_optimal', 'slide'])
     visualize_summary_per_hyperparameter(
         df=df, 
@@ -639,6 +658,7 @@ def visualize_summary_for_corr_optimal(
         hyperparameters=['sim_method', 'correlations', 'window', 'indices', 'pca']
     )
 
+
 def visualize_summary_for_deep_not_optimal(
     df: pd.DataFrame, 
     metric: str,
@@ -647,6 +667,10 @@ def visualize_summary_for_deep_not_optimal(
     inner_x='clusters',
     inner_hue='pca'
 ):
+    """
+    Visualize the summary of the ablation study for DFM without results with optimal number of clusters.
+    """
+
     df_fix_features = df[
         (~df['find_optimal'])
         &(df['features']==20)
@@ -683,10 +707,14 @@ def visualize_summary_for_deep_not_optimal(
 
 
 def visualize_summary_for_deep_optimal(
-        df: pd.DataFrame,
-        metric:  str,
-        color_order: int | None
+    df: pd.DataFrame,
+    metric:  str,
+    color_order: int | None
 ):
+    """
+    Visualize the summary of the ablation study for DFM with results with optimal number of clusters.
+    """
+
     df = df[
         (df['find_optimal'])
         &(df['features'] == 20)
@@ -701,9 +729,13 @@ def visualize_summary_for_deep_optimal(
 
 
 def visualize_summary_for_concat_not_optimal(
-        df: pd.DataFrame,
-        metric: str,
+    df: pd.DataFrame,
+    metric: str,
 ):
+    """
+    Visualize the summary of the ablation study for DCM without results with optimal number of clusters.
+    """
+        
     df = df[~df['find_optimal']].drop(columns='find_optimal')
     y_lim = [df[metric].min(), df[metric].max()]
     face_grid_3_dim(
@@ -716,10 +748,14 @@ def visualize_summary_for_concat_not_optimal(
 
 
 def visualize_summary_for_concat_optimal(
-        df: pd.DataFrame,
-        metric: str,
-        color_order: int | None
+    df: pd.DataFrame,
+    metric: str,
+    color_order: int | None
 ):
+    """
+    Visualize the summary of the ablation study for DFM with results with optimal number of clusters.
+    """
+
     df = df[df['find_optimal']].drop(columns='find_optimal')
     visualize_summary_per_hyperparameter(
         df=df,
@@ -731,10 +767,14 @@ def visualize_summary_for_concat_optimal(
 
 
 def visualize_summary_for_end_to_end(
-        df: pd.DataFrame,
-        metric: str,
-        color_order: int | None
+    df: pd.DataFrame,
+    metric: str,
+    color_order: int | None
 ):
+    """
+    Visualize the summary of the ablation study for EEM.
+    """
+        
     df = df[(df['l2_reg'] == 0) & (df['entropy_reg'] != 0)].drop(columns='l2_reg')
     df['match_codes'] = df['clusters_real'] == df['num_codes']
     df['match_codes'] = df['match_codes'].apply(lambda x : 'match' if x else 'not match')

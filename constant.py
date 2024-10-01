@@ -1,5 +1,9 @@
+from __future__ import annotations
 import torch.nn as nn
 import seaborn as sns
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from networks import CNN, MLPBlock, ConvBlock, ConvTransBlock
 
 PYTHON_INTER = 'f:/venvs/pytorch/Scripts/python.exe'
 
@@ -17,7 +21,7 @@ COLUMN_MAP_RETURN = {
     'CSI BARC Index' : 'DIFF'
 }
 
-STRING_MODULE_MAP = {
+TORCH_MODULE_MAP = {
     'softmax' : nn.Softmax(dim=-1)
 }
 
@@ -28,4 +32,11 @@ CUSTOM_PALETTE = {
     '1' : sns.color_palette()[1],
     10 : sns.color_palette()[0],
     1 : sns.color_palette()[1],
+}
+
+CUSTOM_MODULE_MAP = {
+    'cnn' : CNN,
+    'mlp' : MLPBlock,
+    'conv' : ConvBlock,
+    'conv_trans' : ConvTransBlock
 }

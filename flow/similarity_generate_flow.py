@@ -45,7 +45,7 @@ if __name__ == '__main__':
         methods=args.correlaton_methods
     )
     
-    dataset = data.TimeSeriesCorrelationsDatset(data=correlation_matrices, dates=dates)
+    dataset = data.TimeSeriesCorrelationsDataset(data=correlation_matrices, dates=dates)
 
     # generate similarity matrix
     print('start : generate similarity matrix')

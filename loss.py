@@ -4,7 +4,14 @@ import torch.nn.functional as F
 
 class KLDivergenceLoss(nn.Module):
     """KL Divergence Loss with optional l2 norm regularization for model weights."""
-    def __init__(self, l2_reg_weight=0.01, entropy_reg_weight=0.0):
+    def __init__(self, l2_reg_weight: float | None = 0.01, entropy_reg_weight: float | None = 0.0):
+        """
+        Initialize the class.
+
+        Args:
+            l2_reg_weight (float): Weight of the l2 regularization term in whole loss function. Default to `0.01`.
+            entropy_reg_weight (float): Weight of the inverse entropy loss tern in the whole loss function. Default to `0.0`.
+        """
         super(KLDivergenceLoss, self).__init__()
         self.l2_reg_weight = l2_reg_weight
         self.entropy_reg_weight = entropy_reg_weight
