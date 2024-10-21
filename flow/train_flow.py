@@ -14,28 +14,28 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # data and data loader related
-    parser.add_argument('--window_size', type=int, default=128)
-    parser.add_argument('--slide_step', type=int, default=10)
-    parser.add_argument('--images_encoding_method', type=str, default='gasf')
-    parser.add_argument('--lag', type=int, default=1)
-    parser.add_argument('--indices', type=str_list, default='')
-    parser.add_argument('--batch_size', type=int, default=32)
-    parser.add_argument('--apply_norm', action='store_true')
+    parser.add_argument('--window_size', type=int, default=128, help='Length of the sliding window. Default to 128.')
+    parser.add_argument('--slide_step', type=int, default=10, help='Length of the sliding step. Default to 10.')
+    parser.add_argument('--images_encoding_method', type=str, default='gasf', help='Method to transform univariate time series into an image. Default to gasf.')
+    parser.add_argument('--lag', type=int, default=1, help='Lag for the taget image. The image at timestamp t + lag*slide_step will be the target for input image at timestamp t. Default to 1.')
+    parser.add_argument('--indices', type=str_list, default='', help='Number of indices. Default to an empty string.')
+    parser.add_argument('--batch_size', type=int, default=32, help='Batch size.')
+    parser.add_argument('--apply_norm', action='store_true', help='If to normalize the images.')
 
     # model structure related
-    parser.add_argument('--feature_dimension', type=int, default=20)
+    parser.add_argument('--feature_dimension', type=int, default=20, help='Feature dimension. Default to 20.')
     
     # training related
-    parser.add_argument('--learning_rate', type=float, default=1e-5)
-    parser.add_argument('--num_epochs', type=int, default=3000)
-    parser.add_argument('--optimizer_type', type=str, default='adam')
+    parser.add_argument('--learning_rate', type=float, default=1e-5, help='Learning rate for the AutoEncoder. Default to 1e-5.')
+    parser.add_argument('--num_epochs', type=int, default=3000, help='Number of epochs for the AutoEncoder.')
+    parser.add_argument('--optimizer_type', type=str, default='adam', help='Type of the optimizer of the AutoEncoder. Default to adam.')
 
     # files saving related
-    parser.add_argument('--model_save_period', type=int, default=250)
-    parser.add_argument('--save_losses_plot',  action='store_true')
-    parser.add_argument('--save_folder', type=str, default=os.path.join('data/inter data/deep learning', current_time_string))
-    parser.add_argument('--data_file_path', type=str, default=r'data\data\prices.csv')
-    parser.add_argument('--save_encoded_features', action='store_true')
+    parser.add_argument('--model_save_period', type=int, default=250, help='The frequency to save the models. If k, the model will be saved every k epochs. Default to 250.')
+    parser.add_argument('--save_losses_plot',  action='store_true', help='If to save the plot for losses against epochs.')
+    parser.add_argument('--save_folder', type=str, default=os.path.join('data/inter data/deep learning', current_time_string), help='Path to save the model. Default to data/inter data/deep learning/current_time_string.')
+    parser.add_argument('--data_file_path', type=str, default=r'data\data\prices.csv', help='Path of the price data file. Default to data/data/prices.csv')
+    parser.add_argument('--save_encoded_features', action='store_true', help='If to save the extracted features.')
 
 
     args = parser.parse_args()
