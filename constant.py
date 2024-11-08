@@ -1,9 +1,6 @@
-from __future__ import annotations
 import torch.nn as nn
 import seaborn as sns
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from networks import CNN, MLPBlock, ConvBlock, ConvTransBlock
+from modules import CNN, MLPBlock, ConvBlock, ConvTransBlock
 
 PYTHON_INTER = 'f:/venvs/pytorch/Scripts/python.exe'
 
