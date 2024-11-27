@@ -60,6 +60,7 @@ The overview of the four models can be seen in the table below:
 | DCFM          | two-stage       | CNN AutoEncoder       |
 | EEM           | end-to-end      | Siamese CNN           |
 
+The project report got distinction as part of my MSc Data Science and Machine Learning programme at UCL. The report can be seen at https://drive.google.com/file/d/1rvDxbqDT0iZz-Ybv-Ej64zos2VQEr_em/view?usp=sharing
 
 ### Regime Identification Based on Correlation Features: CFM
 
@@ -163,7 +164,7 @@ shown in the table below:
     ├── constant.py
     ├── correlation.py
     ├── data.py
-    ├── example images
+    ├── example images/
     ├── flow
     │   ├── cluster_assess_flow.py
     │   ├── end_to_end_flow.py
@@ -177,6 +178,9 @@ shown in the table below:
     ├── process.py
     ├── README.md
     ├── requirements.txt
+    ├── results summary/
+    │   ├── summary_CFMs.csv
+    │   └── summary_DFMs.csv
     ├── stats.py
     ├── utils.py
     └── visualization.py
@@ -215,6 +219,16 @@ This directory contains all the workflows in this project.
 | [feature_concat_flow.py](flow\feature_concat_flow.py)           | This is for the concatenation of the deep features and the correlation features. |
 | [similarity_generate_flow.py](flow\similarity_generate_flow.py) | Generates similarity matrices, i.e., features based on correlations.|
 | [train_flow.py](flow\train_flow.py)                             | Generates deep features. |
+
+</details>
+
+<details open><summary>results summary</summary>
+This directory contains all the workflows in this project.
+
+| File                                 | Summary |
+| ---                                  | --- |
+| [summary_CFMs.csv](results%20summary\summary_CFMs.csv)           | Summary of ablation study for CFMs.|
+| [summary_DFMs.csv](results%20summary\summary_DFMs.csv)           | Summary of ablation study for DFMs.|
 
 </details>
 
