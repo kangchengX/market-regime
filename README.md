@@ -133,7 +133,7 @@ shown in the table below:
 | **DXY Curncy**     | ✓         |                        | US Dollar Index                           | Currency             |
 | **MXWO Index**     | ✓         | ✓                      | MSCI World Equity Index                   | Equities             |
 | **SPGSIN Index**   | ✓         |                        | S&P GS Industrial Metals Index            | Commodities          |
-| **SPX Index**      |           | ✓                      | S&P 500 Index                             | Equities             |
+| **SPX Index**      | ✓         | ✓                      | S&P 500 Index                             | Equities             |
 | **USGG10YR Index** | ✓         |                        | US 10 year Gov Bond Yield                 | Interest Rates       |
 | **VIX Index**      | ✓         |                        | VIX Index                                 | Volatility           |
 | **XAU Curncy**     | ✓         |                        | Gold Price                                | Commodities          |
@@ -148,8 +148,8 @@ We identified 8 regimes in this model, represneted by different colors in the fo
 <img src="./example images/regimes_vix.png" alt="regimes_vix" />
 The price changes of different indices under different regimes are visualized. Specifically, we focused on annualized percentage price changes, and created `adjusted_change` which is `ann_change` divided by `ann_std` to incorporate the consideration of risks.
 <img src="./example images/returns_ana_within_regimes.png" alt="returns" />
-<p align="center">
 We also used the normalized entropy of the transition matrix to assess the predictability and regime duration median to assess the stability.
+<p align="center">
 <img src="./example images/transition matrix regime level.png" alt="transition" width="301"/>
 <img src="./example images/durations.png" alt="duration" width="493"/>
 </p>
