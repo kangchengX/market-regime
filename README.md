@@ -51,6 +51,8 @@ for time series representation learning with a focus on the local structures. No
 using pure CNN AutoEncoder without recurrent connection effectively detects the 2008 Global
 Financial Crisis and 2019 COVID-19 periods.
 
+These models can be used to identify the current regime, which provides an overall speculation on the market behaviour in the near feature. The market regime can also serve as a crucial feature for predicting price changes of financial products.
+
 The overview of the four models can be seen in the table below:
 
 | Model         | Model Structure | Deep Module Structure |
@@ -140,10 +142,14 @@ shown in the table below:
 ---
 
 ## Example Results
+We explored four different models. One of them, DFM, yields relatively favourable results. Therefore, the results for DFMs are shown here as examples.
 ### A Representative Instance of DFM
+We identified 8 regimes in this model, represneted by different colors in the following figure. VIX is drawn in blue here as well as an indicator.
 <img src="./example images/regimes_vix.png" alt="regimes_vix" />
+The price changes of different indices under different regimes are visualized. Specifically, we focused on annualized percentage price changes, and created `adjusted_change` which is `ann_change` divided by `ann_std` to incorporate the consideration of risks.
 <img src="./example images/returns_ana_within_regimes.png" alt="returns" />
 <p align="center">
+We also used the normalized entropy of the transition matrix to assess the predictability and regime duration median to assess the stability.
 <img src="./example images/transition matrix regime level.png" alt="transition" width="301"/>
 <img src="./example images/durations.png" alt="duration" width="493"/>
 </p>
